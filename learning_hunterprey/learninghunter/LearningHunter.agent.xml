@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+     This source code file is part of an extension of the Jadex examples 
+     GarbageCollector and HunterPrey. In each example one of the agents 
+     is endowed with learning capabilities, resulting in improving 
+     behavior during a single simulation run. Copyright (C) 2018, 
+     Julius Zauleck.
+     
+ 
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+ 
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+ 
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+    
+
+	Exhibits self-learning behavior for searching and
+	eating prey. Does not flee explicitly from hunters.
+-->
+<agent xmlns="http://www.activecomponents.org/jadex-bdi"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.activecomponents.org/jadex-bdi
+	                    http://www.activecomponents.org/jadex-bdi-${jadex_build_version}.xsd"
+	name="LearningHunter"
+	package="learning_hunterprey.learninghunter">
+
+	<imports>
+		<import>jadex.commons.future.*</import>
+		<import>jadex.extension.envsupport.environment.space2d.*</import>
+		<import>jadex.extension.envsupport.environment.*</import>
+		<import>jadex.extension.envsupport.math.*</import>
+	</imports>
+
+	<beliefs>
+		<!-- Environment. -->
+		<belief name="env" class="Grid2D">
+ 			<fact>jadex.application.EnvironmentService.getSpace($component, "my2dspace").get()</fact>
+ 		</belief>
+ 		
+ 		<!-- Myself. -->
+ 		<belief name="myself" class="ISpaceObject">
+ 			<fact>$beliefbase.env.getAvatar($scope.getComponentDescription(), $scope.getAgentModel().getFullName())</fact>
+ 		</belief>
+
+ 		<!-- The nearest known prey. -->
+ 		<belief name="nearest_prey" class="ISpaceObject"/>
+	</beliefs>
+	
+	<plans>
+		<plan name="learninghunter_plan">
+			<body class="LearningHunterPlan"/>
+		</plan>
+	</plans>
+
+	<properties>
+		<!-- The environment may throw exceptions when executing property listeners
+			and these listeners are not valid any longer. This leads to normal plan
+			failure and can therefore be ignored. -->
+		<property name="logging.level">java.util.logging.Level.WARNING</property>
+		<property name="debugging">false</property>
+    </properties>
+
+	<configurations>
+		<configuration name="default">
+			<plans>
+				<initialplan ref="learninghunter_plan"/>
+			</plans>
+		</configuration>
+	</configurations>
+
+</agent>
